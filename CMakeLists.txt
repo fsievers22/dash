@@ -1,6 +1,25 @@
 cmake_minimum_required(VERSION 3.7.0)
 project(dash CXX)
 
+if( TARGET_ARCH STREQUAL "amd64" )
+    message("Building for amd64")
+	set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+elseif( TARGET_ARCH STREQUAL "armhf" )
+    message("Building for armhf")
+    set(CMAKE_C_COMPILER /usr/bin/arm-linux-gnueabihf-gcc-8)
+    set(CMAKE_CXX_COMPILER /usr/bin/arm-linux-gnueabihf-g++-8)
+	set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "armhf")
+elseif( TARGET_ARCH STREQUAL "arm64" )
+    message("Building for arm64")
+    set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc-12)
+    set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++-12)
+	set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
+    set(CMAKE_LIBRARY_ARCHITECTURE "aarch64-linux-gnu")
+    set(ENV{PKG_CONFIG_PATH} "/usr/lib/aarch64-linux-gnu/pkgconfig")
+else()
+    message("Target Architecture not specified, not cross compiling")
+endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -88,6 +107,7 @@ include(${base_directory}/cmake_modules/gitversion.cmake)
 
 target_include_directories(dash PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
+    ~/opendash-project/openauto/build
     )
 
 target_include_directories(dash SYSTEM PRIVATE
@@ -108,7 +128,6 @@ target_include_directories(dash SYSTEM PRIVATE
     ${RTAUDIO_INCLUDE_DIRS}
     ${AASDK_PROTO_INCLUDE_DIRS}
     ${AASDK_INCLUDE_DIRS}
-    ${OPENAUTO_INCLUDE_DIRS}
     ${BCM_HOST_INCLUDE_DIRS}
     ${ILCLIENT_INCLUDE_DIRS}
     ${GST_INCLUDE_DIRS}

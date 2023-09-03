@@ -1,4 +1,4 @@
-set (OPENAUTO_DIR ~/openauto)
+set (OPENAUTO_DIR ~/opendash-project/openauto)
 
 find_path(OPENAUTO_INCLUDE_DIR
     OpenautoLog.hpp
@@ -23,7 +23,7 @@ if (OPENAUTO_FOUND)
         message(STATUS " - Libraries: ${OPENAUTO_LIB_DIR}")
     endif()
     add_library(openauto INTERFACE)
-    target_include_directories(openauto INTERFACE ${OPENAUTO_INCLUDE_DIR}) 
+    target_include_directories(openauto INTERFACE ${OPENAUTO_INCLUDE_DIR} ~/opendash-project/openauto/build) 
     set_target_properties(openauto PROPERTIES INTERFACE_LINK_DIRECTORIES ${OPENAUTO_LIB_DIR})
     target_link_libraries(openauto INTERFACE libopenauto.so )
 else()
